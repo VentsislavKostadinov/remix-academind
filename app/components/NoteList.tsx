@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import { NotesData } from "~/model/NotesData";
 import { NotesList } from "~/model/NotesList";
 
@@ -7,7 +8,7 @@ const NoteList = ({ notes }: NotesList) => {
         <ul id="note-list">
             {notes.map((note: NotesData, index: number) => (
                 <li key={note.id} className="note">
-
+                   <Link to={"/" + note.id}>
                     <article>
                         <header>
                             <ul className="note-meta">
@@ -29,6 +30,7 @@ const NoteList = ({ notes }: NotesList) => {
                         </header>
                         <p>{note.content}</p>
                     </article>
+                    </Link>
                 </li>
             ))}
         </ul>

@@ -6,41 +6,50 @@ import { getStoredNotes, storeNotes } from "~/data/notes";
 import { NotesRequest } from "~/model/NotesRequest";
 import NoteList from "~/components/NoteList";
 import { useLoaderData } from "@remix-run/react";
-import { useState } from "react";
 
 export const links: LinksFunction = () => {
-    return [{ rel: "stylesheet", href: newNoteStyles },
-    { rel: "stylesheet", href: noteListStyles }
-    ]
+  return [{ rel: "stylesheet", href: newNoteStyles },
+  { rel: "stylesheet", href: noteListStyles }
+  ]
 }
 
 export const loader = async () => {
-    const notes = await getStoredNotes();
-    return notes;
+  const notes = await getStoredNotes();
+  return notes;
 }
 
 export const action = async ({ request }: NotesRequest) => {
-    const formData = await request.formData();
-    const noteData = Object.fromEntries(formData);
-    // add validation
-    const existingNotes = await getStoredNotes();
-    noteData.id = new Date().toISOString();
-    const updateNotes = existingNotes.concat(noteData);
-    storeNotes(updateNotes);
-    return redirect('/notes');
+  const formData = await request.formData();
+  const noteData = Object.fromEntries(formData);
+
+  if (noteData.title.length < 5) {
+    return { message: "Invalid title - must be at least 5 characters long!" };
+  }
+
+  const existingNotes = await getStoredNotes();
+  noteData.id = new Date().toISOString();
+  const updateNotes = existingNotes.concat(noteData);
+  storeNotes(updateNotes);
+  // await new Promise<void>((resolve, reject) => setTimeout(() => resolve(), 2000));
+  return redirect('/notes');
+}
+
+export const meta = () => {
+  return [{
+    title: "All Notes",
+    description: "Manage you notes with ease."
+  }]
 }
 
 const Notes = () => {
-   
-   const notes = useLoaderData();
+  const notes = useLoaderData();
 
-
-    return (
-        <main>
-            <NewNote />
-            <NoteList notes={notes}/>
-        </main>
-    )
+  return (
+    <main>
+      <NewNote />
+      <NoteList notes={notes} />
+    </main>
+  )
 }
 
 export default Notes;

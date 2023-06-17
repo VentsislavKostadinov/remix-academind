@@ -1,5 +1,6 @@
 import type { LinksFunction } from "@remix-run/node";
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
@@ -31,6 +32,27 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+      </body>
+    </html>
+  );
+}
+
+
+export function ErrorBoundary() {
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <main>
+         
+        </main>
+        <Link to="/">Go back</Link>
+        {/* add the UI you want your users to see */}
+        <Scripts />
       </body>
     </html>
   );
